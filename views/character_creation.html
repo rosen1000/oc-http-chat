@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <script defer>
+    function preview() {
+      let reader = new FileReader();
+      reader.readAsDataURL(document.getElementById("uploadImage").files[0]);
+
+      reader.onload = (e) => {
+        document.getElementById("avatar").src = e.target.result;
+      }
+
+      document.getElementById('avatar').hidden = false;
+    }
+  </script>
+  <style>
+    body {
+      font-family: sans-serif, monospace;
+    }
+
+    form {
+      margin: 20px;
+    }
+
+    img {
+      height: 200px;
+      width: 200px;
+    }
+
+    .container {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      width: 100%;
+    }
+
+    input[type="file"] {
+      position: absolute;
+      z-index: -1;
+      top: 4px;
+      left: 16px;
+      font-size: 17px;
+      color: #b8b8b8;
+    }
+
+    .button-wrap {
+      position: relative;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 15px;
+      /* height: 36px; */
+      cursor: pointer;
+      border-radius: 5px;
+      background-color: #efefef;
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--mdc-theme-primary);
+      text-align: center;
+      text-transform: uppercase;
+      font-family: Roboto, sans-serif;
+    }
+
+    form * {
+      margin: 12px;
+    }
+
+    form * * {
+      margin: 0px;
+    }
+  </style>
+</head>
+
+<body>
+  <form method="post" enctype="multipart/form-data">
+    <!-- <div>
+      <label for="">Name:</label>
+      <input class="mdc-text-field--filled" type="text">
+    </div> -->
+
+    <label class="mdc-text-field mdc-text-field--filled">
+      <span class="mdc-text-field__ripple"></span>
+      <span class="mdc-floating-label" id="my-label-id">Hint text</span>
+      <input class="mdc-text-field__input" type="text" aria-labelledby="my-label-id">
+      <span class="mdc-line-ripple"></span>
+    </label>
+
+    <img id="avatar" src="" alt="your image" hidden="true">
+    <div class="container">
+      <div class="button-wrap">
+        <label class="button" for="uploadImage">Upload File</label>
+        <input name="avatar" onchange='preview();' accept='image/*' id="uploadImage" type="file">
+      </div>
+    </div>
+
+    <!-- <label for="uploadImage">upload</label>
+    <input class="mdc-button--outlined" id="uploadImage" onchange="preview()" type="file" accept="image/*"><br> -->
+
+    <input class="mdc-button--outlined" type="submit">
+  </form>
+</body>
+
+</html>

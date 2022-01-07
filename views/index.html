@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OC manager</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+  <script>
+    onload = () => {
+      const form = document.querySelector('form')
+      const input = document.querySelector('.input')
+      const messages = document.querySelector('.messages')
+      const username = prompt('Enter your username')
+      const socket = io();
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        addMessage(`${username}: ${input.value}`)
+
+        socket.emit('chat_message', {
+          message: input.value
+        })
+
+        input.value = '';
+      })
+
+      console.log(socket);
+
+      socket.on("chat_message", function (data) {
+        addMessage(data.username + ": " + data.message, data.image);
+      });
+
+      socket.on("user_join", function (data) {
+        addMessage(data + " just joined the chat!");
+      });
+
+      socket.on("user_leave", function (data) {
+        addMessage(data + " has left the chat.");
+      });
+
+      addMessage(`You have joined the chat as ${username}!`);
+      socket.emit('user_join', username);
+
+      function addMessage(text, url) {
+        const li = document.createElement('li');
+        const img = document.createElement('img');
+        const span = document.createElement('span');
+        if (url) img.src = url;
+        img.height = 40
+        span.innerHTML = text;
+        li.appendChild(img);
+        li.appendChild(span);
+        messages.appendChild(li);
+        window.scrollTo(0, document.body.scrollHeight);
+      }
+    }
+  </script>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+    }
+
+    form {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      box-sizing: border-box;
+      padding: 0.25rem;
+    }
+
+    form input {
+      border: 0;
+      padding: 0.5rem;
+      width: 100%;
+      outline: 0;
+      margin-right: 0.5rem;
+      border-radius: 0.25rem;
+      background: #ccc;
+    }
+
+    form button {
+      width: 6rem;
+      background-color: #1b8c00;
+      color: white;
+      border: none;
+      padding: 0.5rem;
+      cursor: pointer;
+      border-radius: 0.25rem;
+      text-transform: uppercase;
+    }
+
+    form button:hover {
+      background-color: #166d01;
+    }
+
+    .messages {
+      margin: 0;
+      padding: 0;
+      margin-bottom: 3rem;
+    }
+
+    .messages li {
+      padding: 0.5rem;
+    }
+
+    .messages li:nth-child(odd) {
+      background: #eee;
+    }
+  </style>
+</head>
+
+<body>
+  <ul class="messages"></ul>
+  <form method="POST">
+    <input type="text" class="input" autocomplete="off" autofocus />
+    <button>Send</button>
+  </form>
+</body>
+
+</html>
